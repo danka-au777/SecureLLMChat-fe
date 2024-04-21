@@ -1,0 +1,533 @@
+{
+	"info": {
+		"_postman_id": "59d50c40-1b0d-4cc1-b737-51e5d1066c9d",
+		"name": "Cognito",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1223625",
+		"_collection_link": "https://autochatic.postman.co/workspace/Gradmission~2e5fb421-ed09-43d2-957e-e6e83124f5ba/collection/1223625-59d50c40-1b0d-4cc1-b737-51e5d1066c9d?action=share&source=collection_link&creator=1223625"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-amz-json-1.1",
+						"type": "text"
+					},
+					{
+						"key": "X-Amz-Target",
+						"value": "AWSCognitoIdentityProviderService.SignUp",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ClientId\": \"{{ClientId}}\",\n  \"Username\": \"nuran\",\n  \"Password\": \"yourStrong!Password8\",\n  \"UserAttributes\": [\n    {\n      \"Name\": \"email\",\n      \"Value\": \"nuran.kasthuriarachchi@gmail.com\"\n    }\n  ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cognito-idp.{{Region}}.amazonaws.com/",
+					"protocol": "https",
+					"host": [
+						"cognito-idp",
+						"{{Region}}",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Email",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-amz-json-1.1",
+						"type": "text"
+					},
+					{
+						"key": "X-Amz-Target",
+						"value": "AWSCognitoIdentityProviderService.ConfirmSignUp",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ClientId\": \"{{ClientId}}\",\n  \"Username\": \"nuran\",\n  \"ConfirmationCode\": \"141408\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cognito-idp.{{Region}}.amazonaws.com/",
+					"protocol": "https",
+					"host": [
+						"cognito-idp",
+						"{{Region}}",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Authentication[Login]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.AuthenticationResult.IdToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-amz-json-1.1",
+						"type": "text"
+					},
+					{
+						"key": "X-Amz-Target",
+						"value": "AWSCognitoIdentityProviderService.InitiateAuth",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"AuthFlow\": \"USER_PASSWORD_AUTH\",\n  \"ClientId\": \"{{ClientId}}\",\n  \"AuthParameters\": {\n    \"USERNAME\": \"nuran\",\n    \"PASSWORD\": \"yourStrong!Password8\"\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cognito-idp.{{Region}}.amazonaws.com/",
+					"protocol": "https",
+					"host": [
+						"cognito-idp",
+						"{{Region}}",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api gateway",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://d1mgavax5f35ri.cloudfront.net/api/documents",
+					"protocol": "https",
+					"host": [
+						"d1mgavax5f35ri",
+						"cloudfront",
+						"net"
+					],
+					"path": [
+						"api",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api gateway direct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://s6gbso96ee.execute-api.us-east-1.amazonaws.com/api/documents",
+					"protocol": "https",
+					"host": [
+						"s6gbso96ee",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"api",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Documents",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Summary",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://d1mgavax5f35ri.cloudfront.net/api/documents/10/summary",
+					"protocol": "https",
+					"host": [
+						"d1mgavax5f35ri",
+						"cloudfront",
+						"net"
+					],
+					"path": [
+						"api",
+						"documents",
+						"10",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Summary Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://d1mgavax5f35ri.cloudfront.net/api/documents/10/summary",
+					"protocol": "https",
+					"host": [
+						"d1mgavax5f35ri",
+						"cloudfront",
+						"net"
+					],
+					"path": [
+						"api",
+						"documents",
+						"10",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post document query",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://d1mgavax5f35ri.cloudfront.net/api/documents/10/summary",
+					"protocol": "https",
+					"host": [
+						"d1mgavax5f35ri",
+						"cloudfront",
+						"net"
+					],
+					"path": [
+						"api",
+						"documents",
+						"10",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Summary via api endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://s6gbso96ee.execute-api.us-east-1.amazonaws.com/api/documents/10/summary",
+					"protocol": "https",
+					"host": [
+						"s6gbso96ee",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"api",
+						"documents",
+						"10",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Query via api endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"query\": \"This is a query from Nuran. Please help.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://s6gbso96ee.execute-api.us-east-1.amazonaws.com/api/documents/10/query",
+					"protocol": "https",
+					"host": [
+						"s6gbso96ee",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"api",
+						"documents",
+						"10",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post upload document via api endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://s6gbso96ee.execute-api.us-east-1.amazonaws.com/api/documents/upload",
+					"protocol": "https",
+					"host": [
+						"s6gbso96ee",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"api",
+						"documents",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post upload document",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://d1mgavax5f35ri.cloudfront.net/api/documents/upload",
+					"protocol": "https",
+					"host": [
+						"d1mgavax5f35ri",
+						"cloudfront",
+						"net"
+					],
+					"path": [
+						"api",
+						"documents",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post upload document Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://d1mgavax5f35ri.cloudfront.net/api/documents/upload",
+					"protocol": "https",
+					"host": [
+						"d1mgavax5f35ri",
+						"cloudfront",
+						"net"
+					],
+					"path": [
+						"api",
+						"documents",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
