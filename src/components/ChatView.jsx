@@ -8,25 +8,6 @@ import { replaceProfanities } from "no-profanity";
 import Modal from "./Modal";
 import Setting from "./Setting";
 
-const template = [
-    {
-        title: "Plan a trip",
-        prompt: "I want to plan a trip to New York City.",
-    },
-    {
-        title: "how to make a cake",
-        prompt: "How to make a cake with chocolate and strawberries?",
-    },
-    {
-        title: "Business ideas",
-        prompt: "Generate 5 business ideas for a new startup company.",
-    },
-    {
-        title: "What is recursion?",
-        prompt: "What is recursion? show me an example in python.",
-    },
-];
-
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
@@ -174,22 +155,13 @@ const ChatView = () => {
                     ))
                 ) : (
                     <div className="flex my-2">
-                        <div className="w-screen overflow-hidden">
-                            <ul className="grid grid-cols-2 gap-2 mx-10">
-                                {template.map((item, index) => (
-                                    <li
-                                        onClick={() =>
-                                            setFormValue(item.prompt)
-                                        }
-                                        key={index}
-                                        className="p-6 border rounded-lg border-slate-300 hover:border-slate-500"
-                                    >
-                                        <p className="text-base font-semibold">
-                                            {item.title}
-                                        </p>
-                                        <p className="text-sm">{item.prompt}</p>
-                                    </li>
-                                ))}
+                        <div className="w-screen overflow-hidden content-center justify-items-center">
+                            <ul className="grid content-center justify-items-center">
+                                <li className="content-center justify-items-center p-6 border rounded-lg border-slate-300 hover:border-slate-500">
+                                    <h1 className="text-base font-semibold content-center justify-items-center ">
+                                        Welcome to SecureLLMChat
+                                    </h1>
+                                </li>
                             </ul>
                         </div>
                     </div>

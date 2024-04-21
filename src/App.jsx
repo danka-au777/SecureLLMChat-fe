@@ -10,7 +10,7 @@ const App = () => {
     const [modalOpen, setModalOpen] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const token = JSON.parse(localStorage.getItem("token"));
         if (!token) {
             setModalOpen(true);
         } else {
