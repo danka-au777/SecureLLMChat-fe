@@ -56,24 +56,24 @@ const SideBar = () => {
         const token = localStorage.getItem("token");
         if (!token) return;
         try {
-            // // You can write the URL of your server or any other endpoint used for file upload
-            // const result = await fetch(
-            //     "https://d1mgavax5f35ri.cloudfront.net/api/documents/upload",
-            //     {
-            //         method: "POST",
-            //         body: JSON.stringify({ file: encodedFile(file) }),
-            //         headers: {
-            //             Accept: "*/*",
-            //             "Content-Type": "application/json",
-            //             "X-Filename": file.name.toString(),
-            //             Authorization: `Bearer ${token}`,
-            //         },
-            //     }
-            // );
-            // const data = await result.json();
-            // console.log(`upload data respond is: ${data}`);
-            const data = { id: "10" };
-            setRespondData(data);
+            // You can write the URL of your server or any other endpoint used for file upload
+            const result = await fetch(
+                "https://d1mgavax5f35ri.cloudfront.net/api/documents/upload",
+                {
+                    method: "POST",
+                    body: JSON.stringify({ file: encodedFile(file) }),
+                    headers: {
+                        Accept: "*/*",
+                        "Content-Type": "application/json",
+                        "X-Filename": file.name.toString(),
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const data = await result.json();
+            console.log(`upload data respond is: ${data}`);
+            // const data = { id: "10" };
+            // setRespondData(data);
         } catch (error) {
             if (!localStorage.getItem("token")) {
                 setModalOpen(true);

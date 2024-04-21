@@ -133,8 +133,8 @@ const ChatView = () => {
                 updateMessage(text, true);
             })
             .catch((error) => {
-                // setModalOpen(true);
-                // localStorage.setItem("token", null);
+                setModalOpen(true);
+                localStorage.setItem("token", null);
                 console.error(error);
             });
     }, [respondData]);
