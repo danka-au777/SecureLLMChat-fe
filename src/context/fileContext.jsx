@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
-import { createContext, useState } from 'react';
-
+import PropTypes from "prop-types";
+import { createContext, useState } from "react";
 
 /**
  * fileContext is a context object that is used to share collection of messages
@@ -16,17 +15,17 @@ const FileContext = createContext({});
  * @returns {JSX.Element} A fileContext.Provider element.
  */
 const FileContextProvider = (props) => {
-    const [file, setFile] = useState(null);
+    const [respondData, setRespondData] = useState(null);
 
-  return (
-    <FileContext.Provider value={[file, setFile]}>
-      {props.children}
-    </FileContext.Provider>
-  );
+    return (
+        <FileContext.Provider value={[respondData, setRespondData]}>
+            {props.children}
+        </FileContext.Provider>
+    );
 };
 
 export { FileContext, FileContextProvider };
 
 FileContextProvider.propTypes = {
     children: PropTypes.node.isRequired,
-  };
+};

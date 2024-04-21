@@ -1,94 +1,103 @@
-import { useEffect, useState } from 'react';
-import { checkApiKey } from '../utils/checkKeys';
+import { useEffect, useState } from "react";
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const Setting = ({ modalOpen, setModalOpen }) => {
-  const apiKey = window.localStorage.getItem('api-key') || '';
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [username, setUsername] = useState("");
+    const [psw, setPsw] = useState("");
 
-  const saveKey = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg('');
-    const keys = input;
+    const loginToAWS = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setErrorMsg("");
 
-    await checkApiKey(keys)
-      .then(() => {
-        window.localStorage.setItem('api-key', keys);
-        console.log('works');
-        setModalOpen(false);
-      })
-      .catch(() => {
-        console.log('doesnt work');
-        setErrorMsg('error: incorrect keys');
-      });
+        await fetch("https://cognito-idp.us-east-1.amazonaws.com/", {
+            method: "POST",
+            headers: {
+                Accept: "*/*",
+                "Content-Type": "application/x-amz-json-1.1",
+                "X-Amz-Target":
+                    "AWSCognitoIdentityProviderService.InitiateAuth",
+            },
+            body: JSON.stringify({
+                AuthFlow: "USER_PASSWORD_AUTH",
+                ClientId: "eclutjrn1sit6reqlb808iha",
+                AuthParameters: {
+                    USERNAME: username,
+                    PASSWORD: psw,
+                },
+            }),
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((content) => {
+                const { AuthenticationResult } = content;
+                const { IdToken } = AuthenticationResult;
+                localStorage.setItem("token", JSON.stringify(IdToken));
+                console.log("works");
+                setModalOpen(false);
+            })
+            .catch(() => {
+                console.log("doesnt work");
+                setErrorMsg("error: login fail, check credentials");
+                setModalOpen(true);
+                localStorage.setItem("token", null);
+            });
 
-    setLoading(false);
-  };
+        setLoading(false);
+    };
 
-  const removeApiKey = () => {
-    window.localStorage.removeItem('api-key');
-    setInput('');
-  };
+    // useEffect(() => {
+    //     if (modalOpen) {
+    //         setPsw(token);
+    //     }
+    // }, [token, modalOpen]);
 
-  useEffect(() => {
-    if (modalOpen) {
-      setInput(apiKey);
-    }
-  }, [apiKey, modalOpen]);
-
-  return (
-    <form
-      onSubmit={saveKey}
-      className='flex flex-col items-center justify-center gap-2'>
-      <p className='text-lg font-semibold'>Use your own API-key.</p>
-      <p>keys are saved in your own browser</p>
-      <p className='italic'>
-        Get OpenAI API key{' '}
-        <a
-          className='text-blue-600'
-          rel='noreferrer'
-          target='_blank'
-          href='https://platform.openai.com/account/api-keys'>
-          here
-        </a>
-        .
-      </p>
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        type='password'
-        className='w-full max-w-xs input input-bordered'
-      />
-      <button disabled={loading} className='w-full max-w-xs btn btn-outline'>
-        {loading ? (
-          <>
-            <span className='loading loading-spinner' />
-            <p>Checking Api Key</p>
-          </>
-        ) : (
-          'save to localStorage'
-        )}
-      </button>
-      {apiKey && input && (
-        <span
-          onClick={removeApiKey}
-          disabled={loading}
-          className='w-full max-w-xs btn btn-error'>
-          remove keys
-        </span>
-      )}
-      <p>{errorMsg}</p>
-    </form>
-  );
+    return (
+        <form
+            onSubmit={loginToAWS}
+            className="flex flex-col items-center justify-center gap-2"
+        >
+            <label htmlFor="username">Username:</label>
+            <input
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                type="text"
+                className="w-full max-w-xs input input-bordered"
+            />
+            <label htmlFor="psw">Password:</label>
+            <input
+                id="psw"
+                value={psw}
+                onChange={(e) => setPsw(e.target.value)}
+                type="password"
+                className="w-full max-w-xs input input-bordered"
+            />
+            <button
+                disabled={loading}
+                className="w-full max-w-xs btn btn-outline"
+            >
+                {loading ? (
+                    <>
+                        <span className="loading loading-spinner" />
+                        <p>Checking...</p>
+                    </>
+                ) : (
+                    "Login"
+                )}
+            </button>
+            <p>{errorMsg}</p>
+        </form>
+    );
 };
 
 export default Setting;
 
 Setting.propTypes = {
-  modalOpen: PropTypes.bool.isRequired,
-  setModalOpen: PropTypes.func.isRequired,
+    modalOpen: PropTypes.bool.isRequired,
+    setModalOpen: PropTypes.func.isRequired,
 };
